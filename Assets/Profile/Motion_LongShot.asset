@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb69f1d1094590c4d9cc744d1db7ad86, type: 3}
+  m_Name: Motion_LongShot
+  m_EditorClassIdentifier: 
+  <state>k__BackingField: 12
+  <cutInType>k__BackingField: 0
+  <transitionalPeriod>k__BackingField: []
+  <rangeBool>k__BackingField: []
+  <effectInstancers>k__BackingField:
+  - <obj>k__BackingField: {fileID: 8588358956446967859, guid: 90f8bc81ab566104da5dde2f857eb407,
+      type: 3}
+    <clones>k__BackingField:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    <state>k__BackingField: 0
+    randomInstanceSound:
+    - {fileID: 8300000, guid: 10c0d180234489340a46283502e53466, type: 3}
+    parent: {fileID: 0}
+  <motionTime>k__BackingField: 1

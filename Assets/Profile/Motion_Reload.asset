@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb69f1d1094590c4d9cc744d1db7ad86, type: 3}
+  m_Name: Motion_Reload
+  m_EditorClassIdentifier: 
+  <state>k__BackingField: 16
+  <cutInType>k__BackingField: 0
+  <transitionalPeriod>k__BackingField:
+  - <beforeMotion>k__BackingField: 14
+    <thresholdRatio>k__BackingField:
+      <isReaching>k__BackingField: 1
+      thresholdRange:
+        min: 0.8
+        max: 1
+      currentValue: 0.8974923
+  <rangeBool>k__BackingField:
+  - min: 0.1
+    max: 1
+  - min: 0.5
+    max: 1
+  <effectInstancers>k__BackingField:
+  - <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    randomInstanceSound:
+    - {fileID: 8300000, guid: 8e490013818b012438e477cdd2f27449, type: 3}
+    parent: {fileID: 0}
+  - <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    randomInstanceSound:
+    - {fileID: 8300000, guid: a81c82dea5f4c664baad72e00d7b94e3, type: 3}
+    parent: {fileID: 0}
+  <motionTime>k__BackingField: 1.4
