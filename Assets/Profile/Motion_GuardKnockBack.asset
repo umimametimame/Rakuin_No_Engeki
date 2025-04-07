@@ -13,8 +13,58 @@ MonoBehaviour:
   m_Name: Motion_GuardKnockBack
   m_EditorClassIdentifier: 
   <state>k__BackingField: 17
-  <cutInType>k__BackingField: 2
-  <transitionalPeriod>k__BackingField: []
+  <cutInType>k__BackingField: 0
+  <inertia_>k__BackingField:
+    <active>k__BackingField: 0
+    <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+    durationTime:
+      <active>k__BackingField: 0
+      interval: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+    ratioCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      multiplyValue: 0
+      <profile>k__BackingField: {fileID: 0}
+  <inertia>k__BackingField:
+    durationTime: 0
+    ratioCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      multiplyValue: 0
+      <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+        type: 2}
   <rangeBool>k__BackingField: []
   <effectInstancers>k__BackingField: []
+  <motionStateValueList>k__BackingField: []
   <motionTime>k__BackingField: 1.5

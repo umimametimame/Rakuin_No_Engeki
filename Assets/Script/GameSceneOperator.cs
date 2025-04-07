@@ -10,6 +10,7 @@ public class GameSceneOperator : SceneOperator
     [SerializeField] private Transform respownPosition_GuideObject;
     [SerializeField] private Instancer player;
     [SerializeField] private Transform fallLimitRange_GuideObject;
+    [SerializeField] private Rule rule;
     protected override void Start()
     {
         for(int i = 0; i  < 2; i++)
@@ -20,6 +21,8 @@ public class GameSceneOperator : SceneOperator
             DisplayByPlayer _display = player.lastObj.GetComponent<DisplayByPlayer>();
 
             _player.respawnPosition = respownPosition_GuideObject.position;
+            _player.score.AssignMax(rule.maxScore);
+            _player.score.AssingEntityByMax();
 
             _display.TargetDisplay = i;
 
@@ -83,4 +86,11 @@ public class GameSceneOperator : SceneOperator
 
         return false;
     }
+}
+
+[Serializable]
+public struct Rule
+{
+    public float timeLimit;
+    public int maxScore;
 }

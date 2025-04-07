@@ -104,37 +104,38 @@ public class TransitionalMotionThreshold
     [field: SerializeField, NonEditable] public GeneralMotion state { get; protected set; }
     [field: SerializeField, NonEditable] public List<TransitionalMotionThreshold> transitionalPeriod { get; set; }
     [field: SerializeField, NonEditable] public List<Range> actionByTimeRange { get; set; } = new List<Range>();
-    [field: SerializeField, NonEditable] public float motionTime { get; protected set; }
+    /// <summary>
+    /// intervalが負の場合持続系モーション
+    /// </summary>
     [field: SerializeField, NonEditable] public Interval currentMotionTime { get; set; }
     [field: SerializeField, NonEditable] public Exist exist { get; set; } = new Exist();
     public Action cutIn { get; set; }
+    [field: SerializeField] public MotionStateProfile profile { get; set; }
+    public CutInType cutInType;
 
     [SerializeField] protected List<Instancer> effectInstancer = new List<Instancer>();
     public virtual void Initialize()
     {
-        exist.enable += AddExistAction;
-        void AddExistAction()
-        {
-
-            for (int i = 0; i < actionByTimeRange.Count; i++)
-            {
-                actionByTimeRange[i].Update(currentMotionTime.ratio);
-            }
-        }
-
+        exist.enable += Enable_Exist;
         startAction += ResetAction;
         finishAction += ResetAction;
         cutIn += ResetAction;
 
-        void ResetAction()
+        currentMotionTime.Initialize(false, true, 0.0f);
+        AssignProfile();
+
+        if(isDuration == true)
         {
-            for (int i = 0; i < actionByTimeRange.Count; i++)
-            {
-                actionByTimeRange[i].Reset();
-            }
+
         }
+        else
+        {
+            currentMotionTime.activeAction += exist.Disable;
+        }
+        exist.disable += Reset;
     }
-    public virtual void Update()
+
+    public void Update()
     { 
         currentMotionTime.Update();
         exist.Update();
@@ -142,10 +143,6 @@ public class TransitionalMotionThreshold
     public void Start()
     {
         exist.Start();
-    }
-    public void Enable()
-    {
-
     }
     public void Disable()
     {
@@ -158,31 +155,108 @@ public class TransitionalMotionThreshold
     }
 
     /// <summary>
-    /// 現在のモーションが遷移ルートにあり、入力受付可能な場合
+    /// モーションに設定されたタイミングで関数を実行
     /// </summary>
-    /// <param name="currentMotion"></param>
-    /// <returns></returns>
-    public bool NextTransitional(MotionState currentMotion)
+    void Enable_Exist()
     {
-        for (int i = 0; i < transitionalPeriod.Count; ++i)
+
+        for (int i = 0; i < actionByTimeRange.Count; i++)
         {
-            if (currentMotion.state == transitionalPeriod[i].beforeMotion)
-            {
-                if (transitionalPeriod[i].IsReaching)
-                {
-                    return true;
-                }
-            }
+            actionByTimeRange[i].Update(currentMotionTime.ratio);
+        }
+    }
+    void ResetAction()
+    {
+        for (int i = 0; i < actionByTimeRange.Count; i++)
+        {
+            actionByTimeRange[i].Reset();
+        }
+    }
+
+    public void AssignProfile(MotionStateProfile newProfile = null)
+    {
+        if (newProfile != null)
+        {
+            profile = newProfile;
         }
 
-        return false;
-    }
-    public bool active
-    {
-        get
+        if (profile != null)
         {
-            return !currentMotionTime.active;
+            state = profile.state;
+            cutInType = profile.cutInType;
+
+            // 手動で指定したカットイン以外なら
+            if (cutInType != CutInType.Handy)
+            {
+                ConvertTransitionalList();
+            }
+            else
+            {
+                TransitionalMotionThreshold add = new TransitionalMotionThreshold();
+                
+                
+                transitionalPeriod = profile.GetTransitionalList;
+                effectInstancer = profile.effectInstancers;
+                actionByTimeRange = new List<Range>();
+                for (int i = 0; i < profile.rangeBool.Count; ++i)
+                {
+                    Range newRange = new Range();
+                    newRange.Initialize(profile.rangeBool[i]);
+                    actionByTimeRange.Add(newRange);
+                }
+            }
+            currentMotionTime.interval = profile.motionTime;
         }
+    }
+    private void ConvertTransitionalList()
+    {
+        List<GeneralMotion> states = ConvertEnums<GeneralMotion>.GetList();
+        transitionalPeriod = new List<TransitionalMotionThreshold>();
+        
+        TransitionalMotionThreshold newTransitional = new TransitionalMotionThreshold();
+        switch (cutInType)
+        {
+            case CutInType.ReverseHandy:
+
+                for (int i = 0; i < states.Count; ++i)
+                {
+                    newTransitional = new TransitionalMotionThreshold();
+                    newTransitional.thresholdRatio.Initialize(0, 1);
+                    newTransitional.beforeMotion = states[i];
+                    transitionalPeriod.Add(newTransitional);
+                    for (int j = 0; j < profile.motionStateValueList.Count; j++)
+                    {
+                        if (states[i] == profile.motionStateValueList[j].beforeMotion)
+                        {
+                            transitionalPeriod.RemoveAt(transitionalPeriod.Count - 1);
+                        }
+                    }
+                }
+                break;
+            case CutInType.IsAll:
+                for (int i = 0; i < states.Count; ++i)
+                {
+                    newTransitional = new TransitionalMotionThreshold();
+                    newTransitional.beforeMotion = states[i];
+                    newTransitional.thresholdRatio.Initialize(0, 1);
+                    transitionalPeriod.Add(newTransitional);
+                }
+                break;
+
+            case CutInType.OtherMyself:
+                for (int i = 0; i < states.Count; ++i)
+                {
+                    newTransitional = new TransitionalMotionThreshold();
+                    if (states[i] != state)
+                    {
+                        newTransitional.beforeMotion = states[i];
+                        newTransitional.thresholdRatio.Initialize(0, 1);
+                        transitionalPeriod.Add(newTransitional);
+                    }
+                }
+                break;
+        }
+        
     }
     #region Existプロパティ
     public Action startAction
@@ -209,121 +283,19 @@ public class TransitionalMotionThreshold
 
     #endregion
 
-    public void ThresholdReset()
+    /// <summary>
+    /// モーション時間が負ならtrue
+    /// </summary>
+    public bool isDuration
     {
-        for(int i = 0; i < transitionalPeriod.Count; ++i)
+        get
         {
-            transitionalPeriod[i].thresholdRatio.Reset();
-        }
-    }
-
-    public void ThresholdUpdate(float _ratio)
-    {
-        for (int i = 0; i < transitionalPeriod.Count; ++i)
-        {
-            transitionalPeriod[i].thresholdRatio.Update(_ratio);
-        }
-
-    }
-
-
-}
-
-[Serializable] public class DurationMotionState : MotionState
-{
-
-}
-
-
-[Serializable] public class RigorMotionState : MotionState
-{
-    [field: SerializeField] public RigorMotionStateProfile profile { get; set; }
-    public CutInType cutInType;
-    
-    public void AssignProfile(RigorMotionStateProfile newProfile = null)
-    {
-        if (newProfile != null)
-        {
-            profile = newProfile;
-        }
-
-        if (profile != null)
-        {
-            state = profile.state;
-            cutInType = profile.cutInType;
-
-            // 手動で指定したカットイン以外なら
-            if(cutInType != CutInType.Handy)
+            if(currentMotionTime.interval <= 0)
             {
-                ConvertTransitionalList();
+                return true;
             }
-            else
-            {
-                transitionalPeriod = profile.transitionalPeriod;
-                effectInstancer = profile.effectInstancers;
-                actionByTimeRange = new List<Range>();
-                for(int i = 0; i < profile.rangeBool.Count; ++i)
-                {
-                    Range newRange = new Range();
-                    newRange.Initialize(profile.rangeBool[i]);
-                    actionByTimeRange.Add(newRange);
-                }
-            }
-            motionTime = profile.motionTime;
-        }
-    }
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        AssignProfile(); 
-        currentMotionTime.Initialize(false, true, motionTime);
-
-        exist.disable += Reset;
-
-        currentMotionTime.activeAction += exist.Disable;
-
-    }
-
-    private void ConvertTransitionalList()
-    {
-        List<GeneralMotion> states = ConvertEnums<GeneralMotion>.GetList();
-        for (int i = 0; i < states.Count; ++i)
-        {
-            TransitionalMotionThreshold newTransitional = new TransitionalMotionThreshold();
-            switch (cutInType)
-            {
-                case CutInType.ReverseHandy:
-                    for(int j = 0; j < profile.transitionalPeriod.Count; j++)
-                    {
-                        if (states[i] != profile.transitionalPeriod[j].beforeMotion)
-                        {
-                            newTransitional.beforeMotion = states[i];
-                            newTransitional.thresholdRatio.Initialize(-1, -1);
-                            transitionalPeriod.Add(newTransitional);
-                        }
-                        else
-                        {
-                            newTransitional = profile.transitionalPeriod[j];
-                            transitionalPeriod.Add(newTransitional);
-                        }
-                    }
-                    break;
-                case CutInType.IsAll:
-                    newTransitional.beforeMotion = states[i];
-                    newTransitional.thresholdRatio.Initialize(0, 1);
-                    transitionalPeriod.Add(newTransitional);
-                    break;
-
-                case CutInType.OtherMyself:
-                    if (states[i] != state)
-                    {
-                        newTransitional.beforeMotion = states[i];
-                        newTransitional.thresholdRatio.Initialize(0, 1);
-                        transitionalPeriod.Add(newTransitional);
-                    }
-                    break;
-            }
+            return false;
         }
     }
 }

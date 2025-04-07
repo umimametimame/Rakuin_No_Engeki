@@ -318,7 +318,7 @@ MonoBehaviour:
   <alive>k__BackingField: 0
   respawnInterval:
     <active>k__BackingField: 0
-    <interval>k__BackingField: 0
+    interval: 0
     <time>k__BackingField:
       <value>k__BackingField: 0
       <increseType>k__BackingField: 0
@@ -330,13 +330,16 @@ MonoBehaviour:
   rotatePlan: {x: 0, y: 0, z: 0, w: 0}
   <lastAttacker>k__BackingField: {fileID: 0}
   respawnPosition: {x: 0, y: 0, z: 0}
+  score:
+    entity: 0
+    max: 0
+    autoRecoverValue: 0
+  <camp>k__BackingField: 0
+  <input>k__BackingField: {fileID: 0}
   <remainingBullets>k__BackingField:
     entity: 0
     max: 3
     autoRecoverValue: 0
-  <camp>k__BackingField: 0
-  <score>k__BackingField: 0
-  <input>k__BackingField: {fileID: 0}
   <viewPoint>k__BackingField: {fileID: 0}
   <rotateBar>k__BackingField: {fileID: 8639375466333675374}
   <grounding>k__BackingField: 0
@@ -364,16 +367,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <animator>k__BackingField: {fileID: 1934237547544463105}
+  <groundingChecker>k__BackingField:
+    <value>k__BackingField: 0
+    <beforeValue>k__BackingField: 0
+    <changed>k__BackingField: 0
   motionDictionary:
     <currentState>k__BackingField: 0
     <currentMotion>k__BackingField:
       <state>k__BackingField: 0
       <transitionalPeriod>k__BackingField: []
       <actionByTimeRange>k__BackingField: []
-      <motionTime>k__BackingField: 0
       <currentMotionTime>k__BackingField:
         <active>k__BackingField: 0
-        <interval>k__BackingField: 0
+        interval: 0
         <time>k__BackingField:
           <value>k__BackingField: 0
           <increseType>k__BackingField: 0
@@ -382,6 +388,8 @@ MonoBehaviour:
       <exist>k__BackingField:
         <state>k__BackingField: 0
         <oneShot>k__BackingField: 0
+      <profile>k__BackingField: {fileID: 0}
+      cutInType: 0
       effectInstancer: []
     <dicDuration>k__BackingField:
       _serializedList:
@@ -390,10 +398,9 @@ MonoBehaviour:
           <state>k__BackingField: 0
           <transitionalPeriod>k__BackingField: []
           <actionByTimeRange>k__BackingField: []
-          <motionTime>k__BackingField: 0
           <currentMotionTime>k__BackingField:
             <active>k__BackingField: 0
-            <interval>k__BackingField: 0
+            interval: 0
             <time>k__BackingField:
               <value>k__BackingField: 0
               <increseType>k__BackingField: 0
@@ -402,69 +409,100 @@ MonoBehaviour:
           <exist>k__BackingField:
             <state>k__BackingField: 0
             <oneShot>k__BackingField: 0
-          effectInstancer: []
-      - Key: 1
-        Value:
-          <state>k__BackingField: 1
-          <transitionalPeriod>k__BackingField:
-          - <beforeMotion>k__BackingField: 10
-            <thresholdRatio>k__BackingField:
-              <isReaching>k__BackingField: 0
-              thresholdRange:
-                min: 0.7
-                max: 1
-              currentValue: 0
-          - <beforeMotion>k__BackingField: 12
-            <thresholdRatio>k__BackingField:
-              <isReaching>k__BackingField: 0
-              thresholdRange:
-                min: 0.7
-                max: 1
-              currentValue: 0
-          <actionByTimeRange>k__BackingField: []
-          <motionTime>k__BackingField: 0
-          <currentMotionTime>k__BackingField:
-            <active>k__BackingField: 0
-            <interval>k__BackingField: 0
-            <time>k__BackingField:
-              <value>k__BackingField: 0
-              <increseType>k__BackingField: 0
-              reversalIncrese: 0
-            <ratio>k__BackingField: 0
-          <exist>k__BackingField:
-            <state>k__BackingField: 0
-            <oneShot>k__BackingField: 0
-          effectInstancer: []
-      - Key: 2
-        Value:
-          <state>k__BackingField: 2
-          <transitionalPeriod>k__BackingField: []
-          <actionByTimeRange>k__BackingField: []
-          <motionTime>k__BackingField: 0
-          <currentMotionTime>k__BackingField:
-            <active>k__BackingField: 0
-            <interval>k__BackingField: 0
-            <time>k__BackingField:
-              <value>k__BackingField: 0
-              <increseType>k__BackingField: 0
-              reversalIncrese: 0
-            <ratio>k__BackingField: 0
-          <exist>k__BackingField:
-            <state>k__BackingField: 0
-            <oneShot>k__BackingField: 0
+          <profile>k__BackingField: {fileID: 0}
+          cutInType: 0
           effectInstancer: []
     <dicRigor>k__BackingField:
       _serializedList: []
     dicMotions:
       _serializedList: []
+  motion_Guard:
+    <state>k__BackingField: 0
+    <transitionalPeriod>k__BackingField: []
+    <actionByTimeRange>k__BackingField: []
+    <currentMotionTime>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+    <exist>k__BackingField:
+      <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
+    <profile>k__BackingField: {fileID: 11400000, guid: ec65a53956d3e5b438e88a08f94d0d97,
+      type: 2}
+    cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+          type: 2}
+  motion_Fall:
+    <state>k__BackingField: 0
+    <transitionalPeriod>k__BackingField: []
+    <actionByTimeRange>k__BackingField: []
+    <currentMotionTime>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+    <exist>k__BackingField:
+      <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
+    <profile>k__BackingField: {fileID: 11400000, guid: 92d6573e1107a404a8503029ca319cad,
+      type: 2}
+    cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 3
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: 562f8805fb971644c8b2fc424e8fc10e,
+          type: 2}
   motionState_LargeShot:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -473,18 +511,38 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: ee520846e73c1824da555e4d06a94e79,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: 562f8805fb971644c8b2fc424e8fc10e,
+          type: 2}
   motionState_LongShot:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -493,18 +551,38 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: 3e4b889554a040645b3639209e360808,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: 562f8805fb971644c8b2fc424e8fc10e,
+          type: 2}
   motionState_Step:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -513,10 +591,31 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: 02a1649ec0a4d0d4999a36ef2e7e7a94,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+          type: 2}
     stepSpeed:
       curve:
         serializedVersion: 2
@@ -531,10 +630,9 @@ MonoBehaviour:
     <state>k__BackingField: 16
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -543,18 +641,38 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: 3ecd94f11446cdf4da8773609e5aefd7,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: 562f8805fb971644c8b2fc424e8fc10e,
+          type: 2}
   motionState_ThePassive:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -563,10 +681,31 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: 01f6b0b8ef4878947afd6b430b596841,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+          type: 2}
     thePassiveSpeed:
       curve:
         serializedVersion: 2
@@ -581,10 +720,9 @@ MonoBehaviour:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -593,10 +731,31 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: efb67c9a322e930488ecf11f81a65c52,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+          type: 2}
     knockBackSpeed:
       curve:
         serializedVersion: 2
@@ -611,10 +770,9 @@ MonoBehaviour:
     <state>k__BackingField: 0
     <transitionalPeriod>k__BackingField: []
     <actionByTimeRange>k__BackingField: []
-    <motionTime>k__BackingField: 0
     <currentMotionTime>k__BackingField:
       <active>k__BackingField: 0
-      <interval>k__BackingField: 0
+      interval: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0
@@ -623,10 +781,31 @@ MonoBehaviour:
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <oneShot>k__BackingField: 0
-    effectInstancer: []
     <profile>k__BackingField: {fileID: 11400000, guid: dbfc2e18dca36de4590d48995dfa5dfc,
       type: 2}
     cutInType: 0
+    effectInstancer: []
+    inertia:
+      <active>k__BackingField: 0
+      <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+      durationTime:
+        <active>k__BackingField: 0
+        interval: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+      ratioCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        multiplyValue: 0
+        <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+          type: 2}
     downSpeed_x:
       curve:
         serializedVersion: 2
@@ -791,6 +970,7 @@ MonoBehaviour:
       <entity>k__BackingField: {x: 0, y: 0, z: 0}
       <plan>k__BackingField: {x: 0, y: 0, z: 0}
   <velocityPlan>k__BackingField: {x: 0, y: 0, z: 0}
+  <beforeVelocity>k__BackingField: {x: 0, y: 0, z: 0}
   <rotatePlan>k__BackingField: {x: 0, y: 0, z: 0, w: 0}
 --- !u!54 &5006702601715712562
 Rigidbody:
@@ -1783,13 +1963,28 @@ PrefabInstance:
     - target: {fileID: 5628940454996024419, guid: 9a8ed0e5d1a25f743a085a47d7066612,
         type: 3}
       propertyPath: m_Name
-      value: UI
+      value: HUD
       objectReference: {fileID: 0}
     - target: {fileID: 6969300387253519908, guid: 9a8ed0e5d1a25f743a085a47d7066612,
         type: 3}
       propertyPath: parent
       value: 
       objectReference: {fileID: 1991072593075335459}
+    - target: {fileID: 6969300387253519908, guid: 9a8ed0e5d1a25f743a085a47d7066612,
+        type: 3}
+      propertyPath: bulletsTextParameter.text
+      value: 
+      objectReference: {fileID: 6884291783805630061}
+    - target: {fileID: 6969300387253519908, guid: 9a8ed0e5d1a25f743a085a47d7066612,
+        type: 3}
+      propertyPath: bulletsTextParameter.firstHalfText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969300387253519908, guid: 9a8ed0e5d1a25f743a085a47d7066612,
+        type: 3}
+      propertyPath: bulletsTextParameter.secondHalfText
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8898689435302980357, guid: 9a8ed0e5d1a25f743a085a47d7066612,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1901,6 +2096,18 @@ Canvas:
     type: 3}
   m_PrefabInstance: {fileID: 1899448933043281293}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6884291783805630061 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5032166042748972000, guid: 9a8ed0e5d1a25f743a085a47d7066612,
+    type: 3}
+  m_PrefabInstance: {fileID: 1899448933043281293}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6999240717344929416 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8898689435302980357, guid: 9a8ed0e5d1a25f743a085a47d7066612,

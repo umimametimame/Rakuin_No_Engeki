@@ -8,14 +8,14 @@ using System.Collections.Generic;
 public class Player : GenericChara.Chara
 {
     [NonEditable] public Vector3 respawnPosition;
-    [field: SerializeField] public Parameter remainingBullets { get; private set; } = new Parameter();
+    [NonEditable] public Parameter score = new Parameter();
     [field: SerializeField] public Camp camp { get; set; } = new Camp();
-    [field: SerializeField] public float score { get; private set; } = 0;
-    public Rakuin_MotionManager motionManager { get; private set; }
     [field: SerializeField, NonEditable] public TsukiOtoshiInput input { get; private set; }
     public Vector3 beforeMoveInput { get; private set; }
+    [field: SerializeField] public Parameter remainingBullets { get; private set; } = new Parameter();
     [field: SerializeField, NonEditable] public TPSViewPoint viewPoint { get; private set; }
     [field: SerializeField] public MomentaryBarAndDelayedBar rotateBar { get; private set; }
+    public Rakuin_MotionManager motionManager { get; private set; }
     [field: SerializeField, NonEditable] public bool grounding { get; private set; }
     public GeneralMotion currentMotionState
     {
@@ -24,6 +24,10 @@ public class Player : GenericChara.Chara
             return motionManager.motionDictionary.currentState;
         }
     }
+
+    /// <summary>
+    /// Guardステート/GuardKnockBackステートなら
+    /// </summary>
     public bool guard
     {
         get
@@ -45,7 +49,7 @@ public class Player : GenericChara.Chara
     /// <summary>
     /// StepまたはDown状態で無敵時間内なら
     /// </summary>
-    public bool Invinsible   
+    public bool invinsible   
     {
         get
         {
@@ -70,7 +74,7 @@ public class Player : GenericChara.Chara
 
     private void Awake()
     {
-        remainingBullets.Initialize();
+        remainingBullets.AssingEntityByMax();
         aliveAction += AliveAction;
 
     }
@@ -92,14 +96,14 @@ public class Player : GenericChara.Chara
 
     private void AliveAction()
     {
-        overFallingLimit();
+        OverFallingLimit();
         assignSpeed = speed.entity;
         stepInvisible.Update(motionManager.motionDictionary.dicMotions[GeneralMotion.Step].currentMotionTime.ratio);
         viewPoint.ChangeSeeSawAngle(input.viewPointInput.entity);
         BodyRotate();
     }
 
-    private void overFallingLimit()
+    private void OverFallingLimit()
     {
         if(GameSceneOperator.instance.isOverFallLimit(this) == true)
         {
@@ -124,12 +128,12 @@ public class Player : GenericChara.Chara
     /// </summary>
     public void Defeat()
     {
-        score += 1;
+        score.Update(1);
     }
 
     private void DestroyOnSelfPenalty()
     {
-        score -= 1;
+        score.Update(-1);
     }
 
     private void InitializePosition()
@@ -192,11 +196,11 @@ public class Player : GenericChara.Chara
         lastAttacker = _enemy.GetComponent<GenericChara.Chara>();
         if (guard == true)
         {
-            motionManager.motionDictionary.ChangeState(GeneralMotion.GuardKnockBack);
+            motionManager.motionDictionary.NextStatePlan(GeneralMotion.GuardKnockBack);
         }
         else
         {
-            motionManager.motionDictionary.ChangeState(GeneralMotion.Down);
+            motionManager.motionDictionary.NextStatePlan(GeneralMotion.Down);
         }
 
         // 食らった方向を向く(相手と同じ方向を向き、半回転する)

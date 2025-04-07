@@ -4,15 +4,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [Serializable]
-public class Rakuin_RigorMotionState : RigorMotionState
+public class Rakuin_MotionState : MotionState
 {
-    public void AssignChara(Player _player)
+    public Player player { get; private set; }
+    public Inertia inertia = new Inertia();
+
+    public void Initialize(Player _player)
     {
         player = _player;
+        inertia.Initialize_PassByValue(profile.Inertia);
+        inertia.ratioCurve.AssignProfile(profile.Inertia.ratioCurve.profile);
+        exist.start += Start_Inertia;
+        exist.enable += Enable_Inertia;
+        exist.disable += inertia.Reset;
     }
 
-    public Player player { get; private set; }
+    private void Start_Inertia()
+    {
+        inertia.Event_StartImpulse(player.engine.beforeVelocity);
+    }
+
+    private void Enable_Inertia()
+    {
+        player.AddAssignedMoveVelocity(inertia.Evaluate());
+    }
 
     /// <summary>
     /// player.motionManager
@@ -24,14 +41,51 @@ public class Rakuin_RigorMotionState : RigorMotionState
             return player.motionManager;
         }
     }
+
 }
+
 [Serializable]
-public class Motion_Shot : Rakuin_RigorMotionState
+public class Motion_Guard : Rakuin_MotionState
 {
     public override void Initialize()
     {
         base.Initialize();
-        startAction += StartAction;
+    }
+
+    public void Start_Fall()
+    {
+    }
+    public void Enable_Fall()
+    {
+
+    }
+}
+
+[Serializable]
+public class Motion_Fall : Rakuin_MotionState
+{
+    public override void Initialize()
+    {
+        base.Initialize();
+    }
+
+    public void Start_Fall()
+    {
+    }
+    public void Enable_Fall()
+    {
+
+    }
+}
+
+
+[Serializable]
+public class Motion_Shot : Rakuin_MotionState
+{
+    public override void Initialize()
+    {
+        base.Initialize();
+        exist.start += StartAction;
         for (int i = 0; i < actionByTimeRange.Count; i++)
         {
             actionByTimeRange[i].Initialize();
@@ -62,12 +116,12 @@ public class Motion_Shot : Rakuin_RigorMotionState
 }
 
 [Serializable]
-public class Motion_Reload : Rakuin_RigorMotionState
+public class Motion_Reload : Rakuin_MotionState
 {
     public override void Initialize()
     {
         base.Initialize();
-        startAction += Start_Reload;
+        exist.start += Start_Reload;
 
 
         for(int i = 0; i < actionByTimeRange.Count; i++)
@@ -79,18 +133,18 @@ public class Motion_Reload : Rakuin_RigorMotionState
 
     private void Start_Reload()
     {
-        player.remainingBullets.Initialize();
+        player.remainingBullets.AssingEntityByMax();
     }
 }
 [Serializable]
-public class Motion_Step : Rakuin_RigorMotionState
+public class Motion_Step : Rakuin_MotionState
 {
     public RatioCurve stepSpeed = new RatioCurve();
     public override void Initialize()
     {
         stepSpeed.AssignProfile();
         base.Initialize(); 
-        startAction += player.MoveVelocityNormalize;
+        exist.start += player.MoveVelocityNormalize;
         exist.enable += Start_Step;
         for (int i = 0; i < actionByTimeRange.Count; i++)
         {
@@ -101,13 +155,13 @@ public class Motion_Step : Rakuin_RigorMotionState
 
     private void Start_Step()
     {
-        Vector3 newNor = (-player.transform.forward) * stepSpeed.Evalute(motionManager.motionDictionary.dicMotions[GeneralMotion.Step].currentMotionTime.ratio);
+        Vector3 newNor = (-player.transform.forward) * stepSpeed.Evaluate(motionManager.motionDictionary.dicMotions[GeneralMotion.Step].currentMotionTime.ratio);
 
         player.AddMoveVelocity(newNor);
     }
 }
 [Serializable]
-public class Motion_ThePassive : Rakuin_RigorMotionState
+public class Motion_ThePassive : Rakuin_MotionState
 {
     public RatioCurve thePassiveSpeed = new RatioCurve();
     public override void Initialize()
@@ -123,20 +177,20 @@ public class Motion_ThePassive : Rakuin_RigorMotionState
 
     private void Enable_ThePassive()
     {
-        Vector3 newNor = (-player.transform.forward) * thePassiveSpeed.Evalute(motionManager.motionDictionary.dicMotions[GeneralMotion.ThePassive].currentMotionTime.ratio);
+        Vector3 newNor = (-player.transform.forward) * thePassiveSpeed.Evaluate(motionManager.motionDictionary.dicMotions[GeneralMotion.ThePassive].currentMotionTime.ratio);
 
         player.AddMoveVelocity(newNor);
     }
 }
 [Serializable]
-public class Motion_GuardKnockBack : Rakuin_RigorMotionState
+public class Motion_GuardKnockBack : Rakuin_MotionState
 {
     public RatioCurve knockBackSpeed = new RatioCurve();
     public override void Initialize()
     {
         knockBackSpeed.AssignProfile();
         base.Initialize();
-        exist.enable += Enable_Down;
+        exist.enable += Enable_KnockBack;
         for (int i = 0; i < actionByTimeRange.Count; i++)
         {
             actionByTimeRange[i].Initialize();
@@ -144,9 +198,9 @@ public class Motion_GuardKnockBack : Rakuin_RigorMotionState
 
     }
 
-    private void Enable_Down()
+    private void Enable_KnockBack()
     {
-        Vector3 newNor = (-player.transform.forward) * knockBackSpeed.Evalute(motionManager.motionDictionary.dicMotions[GeneralMotion.GuardKnockBack].currentMotionTime.ratio);
+        Vector3 newNor = (-player.transform.forward) * knockBackSpeed.Evaluate(motionManager.motionDictionary.dicMotions[GeneralMotion.GuardKnockBack].currentMotionTime.ratio);
         
         player.AddMoveVelocity(newNor);
     }
@@ -154,7 +208,7 @@ public class Motion_GuardKnockBack : Rakuin_RigorMotionState
 
 
 [Serializable]
-public class Motion_Down : Rakuin_RigorMotionState
+public class Motion_Down : Rakuin_MotionState
 {
     public RatioCurve downSpeed_x = new RatioCurve();
     public RatioCurve downSpeed_y = new RatioCurve();
@@ -173,8 +227,8 @@ public class Motion_Down : Rakuin_RigorMotionState
 
     private void Enable_Down()
     {
-        Vector3 newNor = (-player.transform.forward) * downSpeed_x.Evalute(motionManager.motionDictionary.dicMotions[GeneralMotion.Down].currentMotionTime.ratio);
-        newNor += player.transform.up * downSpeed_y.Evalute(motionManager.motionDictionary.dicMotions[GeneralMotion.Down].currentMotionTime.ratio);
+        Vector3 newNor = (-player.transform.forward) * downSpeed_x.Evaluate(motionManager.motionDictionary.dicMotions[GeneralMotion.Down].currentMotionTime.ratio);
+        newNor += player.transform.up * downSpeed_y.Evaluate(motionManager.motionDictionary.dicMotions[GeneralMotion.Down].currentMotionTime.ratio);
 
         player.AddMoveVelocity(newNor);
     }

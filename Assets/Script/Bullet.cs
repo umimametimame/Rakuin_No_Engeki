@@ -21,13 +21,13 @@ public class Bullet : GenericChara.Chara
         // ヒットしたPlayerクラスが親でなければ
         if(_player.camp != camp)
         {
-            if(_player.Invinsible == false)
+            if(_player.invinsible == false)
             {
 
                 _player.Damage(parent);
                 Debug.Log("ヒット!");
             }
-            else if(_player.Invinsible == true)
+            else if(_player.invinsible == true)
             {
                 Debug.Log("回避!");
             }

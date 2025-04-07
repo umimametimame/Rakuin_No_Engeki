@@ -11,8 +11,8 @@ using UnityEngine;
     [field: SerializeField, NonEditable] public MotionState currentMotion { get; private set; }
     public ValueChecker<GeneralMotion> stateObserver { get; private set; } = new ValueChecker<GeneralMotion>();
 
-    [field: SerializeField] public SerializedDictionary<GeneralMotion, DurationMotionState> dicDuration { get; set; } = new SerializedDictionary<GeneralMotion, DurationMotionState>();
-    [field: SerializeField] public SerializedDictionary<GeneralMotion, RigorMotionState> dicRigor { get; set; } = new SerializedDictionary<GeneralMotion, RigorMotionState>();
+    [field: SerializeField] public SerializedDictionary<GeneralMotion, MotionState> dicDuration { get; set; } = new SerializedDictionary<GeneralMotion, MotionState>();
+    [field: SerializeField] public SerializedDictionary<GeneralMotion, MotionState> dicRigor { get; set; } = new SerializedDictionary<GeneralMotion, MotionState>();
     [field: SerializeField] public SerializedDictionary<GeneralMotion, MotionState> dicMotions = new SerializedDictionary<GeneralMotion, MotionState>();
     public Func<GeneralMotion> thinkFunc { get; set; }
     public Func<GeneralMotion> durationFunc { get; set; }
@@ -22,7 +22,8 @@ using UnityEngine;
     {
         currentState = GeneralMotion.Free;
         stateObserver.Initialize(currentState);
-        stateObserver.changedAction += StateCutIn;
+        stateObserver.changedAction += Event_StateChanged;
+        stateObserver.changedAction += Event_StateCutIn;
 
         InitializeDicMotion();
         Think();
@@ -38,8 +39,6 @@ using UnityEngine;
         foreach(var r in dicRigor)
         {
             r.Value.Initialize();
-            //r.Value.startAction += () => Debug.Log("Start " + r.Value.state);
-            //r.Value.finishAction += () => Debug.Log("Finish " + r.Value.state);
             r.Value.finishAction += Think;
             dicMotions.Add(r.Value.state, r.Value);
         }
@@ -52,16 +51,16 @@ using UnityEngine;
 
     private void Think()
     {
-        ChangeState(thinkFunc.Invoke());
+        NextStatePlan(thinkFunc.Invoke());
     }
 
     /// <summary>
     /// モーション切り替え
     /// </summary>
-    /// <param name="newState"></param>
-    public void ChangeState(GeneralMotion newState)
+    /// <param name="nextState"></param>
+    public void NextStatePlan(GeneralMotion nextState)
     {
-        currentState = newState;
+        currentState = nextState;
         currentMotion = dicMotions[currentState];
         currentMotion.Start();
         currentMotion.Reset();
@@ -70,14 +69,20 @@ using UnityEngine;
 
     public void Update()
     {
-
         stateObserver.Update(currentState);
         DurationMotionUpdate();
         DicMotionUpdate();
 
     }
 
-    private void StateCutIn()
+    private void Event_StateChanged()
+    {
+        currentMotion = dicMotions[currentState];
+        currentMotion.Start();
+        currentMotion.Reset();
+        setAnimatorAction?.Invoke();
+    }
+    private void Event_StateCutIn()
     {
         if (StateIsRigor(stateObserver.beforeValue) == true)
         {
@@ -95,7 +100,7 @@ using UnityEngine;
         {
             if(durationFunc.Invoke() != currentState)
             {
-                ChangeState(durationFunc.Invoke());
+                NextStatePlan(durationFunc.Invoke());
 
             }
         }
@@ -109,17 +114,13 @@ using UnityEngine;
             // 実行中のモーション更新処理
             if (currentState == d.Value.state)
             {
-                d.Value.Enable();
-                //List<Range> rangeBool = d.Value.actionByTimeRange;
-                //for (int i = 0; i < rangeBool.Count; ++i)
-                //{
-                //    rangeBool[i].Update(currentMotion.currentMotionTime.ratio);
-                //}
+
             }
             // 非実行中のモーション更新処理
             else
             {
                 d.Value.Disable();
+                // State変更直後のみ変更するイベント形式にしたい
             }
             // 共通更新処理
             d.Value.Update();
@@ -193,14 +194,4 @@ using UnityEngine;
         return false;
     }
 
-    public Action startAction
-    {
-        set
-        {
-            foreach(var d in dicMotions)
-            {
-                d.Value.startAction += value;
-            }
-        }
-    }
 }

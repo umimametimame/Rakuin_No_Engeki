@@ -14,14 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <state>k__BackingField: 16
   <cutInType>k__BackingField: 0
-  <transitionalPeriod>k__BackingField:
-  - <beforeMotion>k__BackingField: 14
-    <thresholdRatio>k__BackingField:
-      <isReaching>k__BackingField: 1
-      thresholdRange:
-        min: 0.8
-        max: 1
-      currentValue: 0.8974923
+  <inertia_>k__BackingField:
+    <active>k__BackingField: 0
+    <velocity>k__BackingField: {x: 0, y: 0, z: 0}
+    durationTime:
+      <active>k__BackingField: 0
+      interval: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+    ratioCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      multiplyValue: 0
+      <profile>k__BackingField: {fileID: 0}
+  <inertia>k__BackingField:
+    durationTime: 1
+    ratioCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.1
+          inSlope: -0.1
+          outSlope: -0.1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -0.1
+          outSlope: -0.1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      multiplyValue: 1
+      <profile>k__BackingField: {fileID: 11400000, guid: 41200d9b744535f4e8ee80da34b05dd8,
+        type: 2}
   <rangeBool>k__BackingField:
   - min: 0.1
     max: 1
@@ -40,4 +82,9 @@ MonoBehaviour:
     randomInstanceSound:
     - {fileID: 8300000, guid: a81c82dea5f4c664baad72e00d7b94e3, type: 3}
     parent: {fileID: 0}
+  <motionStateValueList>k__BackingField:
+  - beforeMotion: 14
+    thresholdRange:
+      min: 0.7
+      max: 1
   <motionTime>k__BackingField: 1.4

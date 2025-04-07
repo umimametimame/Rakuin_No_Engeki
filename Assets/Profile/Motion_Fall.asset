@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb69f1d1094590c4d9cc744d1db7ad86, type: 3}
-  m_Name: Motion_LongShot
+  m_Name: Motion_Fall
   m_EditorClassIdentifier: 
-  <state>k__BackingField: 12
-  <cutInType>k__BackingField: 0
+  <state>k__BackingField: 2
+  <cutInType>k__BackingField: 1
   <inertia>k__BackingField:
     <active>k__BackingField: 0
     <velocity>k__BackingField: {x: 0, y: 0, z: 0}
@@ -33,20 +33,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       multiplyValue: 0
-      <profile>k__BackingField: {fileID: 11400000, guid: b8c3a251ce8336d4387feeb174b55b16,
+      <profile>k__BackingField: {fileID: 11400000, guid: 562f8805fb971644c8b2fc424e8fc10e,
         type: 2}
   <rangeBool>k__BackingField: []
-  <effectInstancers>k__BackingField:
-  - <obj>k__BackingField: {fileID: 8588358956446967859, guid: 90f8bc81ab566104da5dde2f857eb407,
-      type: 3}
-    <clones>k__BackingField:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    <state>k__BackingField: 0
-    randomInstanceSound:
-    - {fileID: 8300000, guid: 10c0d180234489340a46283502e53466, type: 3}
-    parent: {fileID: 0}
+  <effectInstancers>k__BackingField: []
   <motionStateValueList>k__BackingField: []
-  <motionTime>k__BackingField: 1
+  <motionTime>k__BackingField: -1

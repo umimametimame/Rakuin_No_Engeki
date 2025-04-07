@@ -17,6 +17,8 @@ public class Rakuin_MotionManager : MonoBehaviour
     private Player player;
     private TsukiOtoshiInput input;
     [field: SerializeField] public Animator animator { get; private set; }
+    [field: SerializeField, NonEditable] public ValueChecker<bool> groundingChecker { get; private set; }
+
     private bool grounding
     {
         get
@@ -44,6 +46,9 @@ public class Rakuin_MotionManager : MonoBehaviour
     public Action durationAction;
     public Action rigorAction;
 
+    public Motion_Guard motion_Guard = new Motion_Guard();
+    public Motion_Fall motion_Fall = new Motion_Fall();
+
     public Motion_Shot motionState_LargeShot = new Motion_Shot();
     public Motion_Shot motionState_LongShot = new Motion_Shot();
     public Motion_Step motionState_Step = new Motion_Step();
@@ -56,12 +61,15 @@ public class Rakuin_MotionManager : MonoBehaviour
         player = GetComponent<Player>();
         input = GetComponent<TsukiOtoshiInput>();
         InitializeMotion();
+        groundingChecker.Initialize(player.grounding);
+        groundingChecker.changedAction += Event_FallByGrounding;
 
         AnimationSet_Rigor();
     }
 
     private void Update()
     {
+        groundingChecker.Update(player.grounding);
         AnimationSet_Duration();
         advancedInput.Update();
         motionDictionary.Update();
@@ -72,8 +80,10 @@ public class Rakuin_MotionManager : MonoBehaviour
     
     private void InitializeMotion()
     {
-        List<Rakuin_RigorMotionState> rigorMotionStateList = new List<Rakuin_RigorMotionState>()
+        List<Rakuin_MotionState> rakuin_MotioStateList = new List<Rakuin_MotionState>()
         {
+            motion_Guard,
+            motion_Fall,
             motionState_LargeShot,
             motionState_LongShot,
             motionState_Step,
@@ -82,11 +92,24 @@ public class Rakuin_MotionManager : MonoBehaviour
             motionState_Down,
         };
 
-        for (int i = 0; i < rigorMotionStateList.Count; ++i)
+        for (int i = 0; i < rakuin_MotioStateList.Count; ++i)
         {
-            rigorMotionStateList[i].AssignChara(player);
-            rigorMotionStateList[i].AssignProfile();
-            motionDictionary.dicRigor.Add(rigorMotionStateList[i].state, rigorMotionStateList[i]);
+            rakuin_MotioStateList[i].Initialize(player);
+            rakuin_MotioStateList[i].AssignProfile();
+            if (rakuin_MotioStateList[i].isDuration == true)
+            {
+                motionDictionary.dicDuration.Add(rakuin_MotioStateList[i].state, rakuin_MotioStateList[i]);
+            }
+            else
+            {
+
+                if (rakuin_MotioStateList[i].inertia.isInertiaDuration == true)
+                {
+                    // inertia.durationTime.intervalをモーション時間に設定
+                    rakuin_MotioStateList[i].inertia.durationTime.interval = rakuin_MotioStateList[i].currentMotionTime.interval;
+                }
+                motionDictionary.dicRigor.Add(rakuin_MotioStateList[i].state, rakuin_MotioStateList[i]);
+            }
         }
 
         motionDictionary.thinkFunc += StateThink;
@@ -97,8 +120,24 @@ public class Rakuin_MotionManager : MonoBehaviour
 
         foreach (var d in input.dicInterval)
         {
-            advancedInput.Add(d.Value, () => ChangeState(d.Key), d.Key);
+            advancedInput.Add(d.Value, () => NextStatePlan(d.Key), d.Key);
             advancedInput.dicAdvanced[d.Key].funcs += () => motionDictionary.Transitional(d.Key);
+        }
+
+    }
+
+    /// <summary>
+    /// 接地と接地解除が行われる度に実行するイベント
+    /// </summary>
+    private void Event_FallByGrounding()
+    {
+        if(motionDictionary.currentState != GeneralMotion.Down)
+        {
+            if(motionDictionary.currentState != GeneralMotion.Fall)
+            {
+                NextStatePlan(GeneralMotion.Fall);
+
+            }
         }
 
     }
@@ -132,9 +171,9 @@ public class Rakuin_MotionManager : MonoBehaviour
 
     }
 
-    private void ChangeState(GeneralMotion newState)
+    private void NextStatePlan(GeneralMotion newState)
     {
-        motionDictionary.ChangeState(newState);
+        motionDictionary.NextStatePlan(newState);
     }
     private void AnimationSet_Rigor()
     {
@@ -146,9 +185,6 @@ public class Rakuin_MotionManager : MonoBehaviour
     {
         animator.SetBool(Animator.StringToHash("MoveInput"), input.moveInput.inputting);
     }
-
-
-    
 
 }
 

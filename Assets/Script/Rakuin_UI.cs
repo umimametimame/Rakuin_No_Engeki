@@ -14,14 +14,19 @@ public class Rakuin_UI : MonoBehaviour
     }
     private void Update()
     {
-        bulletsTextParameter.Update(numberOfBullets);
+    }
+    private void FixedUpdate()
+    {
+        bulletsTextParameter.Update((int)numberOfBullets.entity);
+
     }
 
-    public int numberOfBullets
+
+    public Parameter numberOfBullets
     {
         get
         {
-            return (int)parent.remainingBullets.entity;
+            return parent.remainingBullets;
         }
     }
 }
