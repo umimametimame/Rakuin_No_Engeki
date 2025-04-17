@@ -1,4 +1,4 @@
-using AddClass;
+using AddUnityClass;
 using AYellowpaper.SerializedCollections;
 using NUnit.Framework;
 using System;

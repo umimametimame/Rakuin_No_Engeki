@@ -28,7 +28,7 @@ public class TsukiOtoshiInput : InputOperator
     private void SetButtonInputsList()
     {
 
-        Dictionary<GeneralMotion, Interval> newDic = AddClass.ConvertEnums<GeneralMotion, Interval>.GetDic();
+        Dictionary<GeneralMotion, Interval> newDic = AddUnityClass.ConvertEnums<GeneralMotion, Interval>.GetDic();
         foreach (var n in newDic)
         {
             GeneralMotion addMotion = n.Key;

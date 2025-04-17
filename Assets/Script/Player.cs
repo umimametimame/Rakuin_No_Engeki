@@ -1,6 +1,6 @@
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
-using AddClass;
+using AddUnityClass;
 using Photon.Realtime;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ public class Player : GenericChara.Chara
 {
     [NonEditable] public Vector3 respawnPosition;
     [NonEditable] public Parameter score = new Parameter();
-    [field: SerializeField] public Camp camp { get; set; } = new Camp();
+    [field: SerializeField] public int instanceID { get; set; }
     [field: SerializeField, NonEditable] public TsukiOtoshiInput input { get; private set; }
     public Vector3 beforeMoveInput { get; private set; }
     [field: SerializeField] public Parameter remainingBullets { get; private set; } = new Parameter();
@@ -120,6 +120,7 @@ public class Player : GenericChara.Chara
             }
 
             InitializePosition();
+            GameSceneOperator.instance.Event_PlayerDestroy(instanceID);
         }
     }
 
@@ -218,11 +219,4 @@ public class Player : GenericChara.Chara
             return rotateBar.momentaryBar.apex;
         }
     }
-}
-
-
-public enum Camp
-{
-    Player1,
-    Player2,
 }

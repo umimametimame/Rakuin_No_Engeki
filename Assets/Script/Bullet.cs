@@ -5,31 +5,28 @@ using UnityEngine;
 public class Bullet : GenericChara.Chara
 {
     public Player parent;
-    [field: SerializeField] public Camp camp { get; set; }
+    [field: SerializeField] public int camp { get; set; }
     protected override void Start()
     {
         base.Start();
-        camp = parent.camp;
+        camp = parent.instanceID;
     }
     protected override void Update()
     {
         base.Update();
-        //Debug.Log(parent.transform.eulerAngles);
     }
     private void EnterPlayer(Player _player)
     {
         // ヒットしたPlayerクラスが親でなければ
-        if(_player.camp != camp)
+        if(_player.instanceID != camp)
         {
             if(_player.invinsible == false)
             {
 
                 _player.Damage(parent);
-                Debug.Log("ヒット!");
             }
             else if(_player.invinsible == true)
             {
-                Debug.Log("回避!");
             }
         }
     }
